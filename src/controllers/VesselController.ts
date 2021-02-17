@@ -76,14 +76,23 @@ export default {
     });
     await vesselRepository.save(vessel);
      console.log(vessel.id)
+
     if (!vessel.jetski) {
-      const check = checkListERepository.create({ vesselId: vessel.id });
-      await checkListERepository.save(check);
+      try{
+        const check = checkListERepository.create({ vesselId: vessel.id });
+        await checkListERepository.save(check);
+      }catch(err){
+
+      }
     }
 
     if (vessel.jetski) {
-      const check = checkListJRepository.create({ vesselId: vessel.id });
-      await checkListJRepository.save(check);
+      try{
+        const check = checkListJRepository.create({ vesselId: vessel.id });
+        await checkListJRepository.save(check);
+      }catch(err){
+        
+      }
     }
 
     return response.status(201).json(vessel);
