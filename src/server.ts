@@ -15,4 +15,4 @@ app.use(express.json());
 app.use("/files", express.static(resolve(__dirname, "..", "temp", "uploads")));
 app.use(routes);
 
-app.listen(3333);
+app.listen(8080);
