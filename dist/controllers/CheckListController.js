@@ -91,5 +91,5 @@ exports.default = {
         const CheckList = await checkListERepository.find();
         const CheckListJetski = await checkListJRepository.find();
         return response.json({ CheckList, CheckListJetski });
-    },
+    }
 };
