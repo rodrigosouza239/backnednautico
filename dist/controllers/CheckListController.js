@@ -86,8 +86,10 @@ exports.default = {
         }
     },
     async indexAll(request, response) {
-        const vesselsRepository = typeorm_1.getRepository(Vessel_1.default);
-        const vesselExists = await vesselsRepository.find();
-        return response.json(vesselExists);
+        const checkListERepository = typeorm_1.getRepository(CheckListE_1.default);
+        const checkListJRepository = typeorm_1.getRepository(CheckListJ_1.default);
+        const CheckList = await checkListERepository.find();
+        const CheckListJetski = await checkListJRepository.find();
+        return response.json({ CheckList, CheckListJetski });
     },
 };
