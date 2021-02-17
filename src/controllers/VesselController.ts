@@ -75,7 +75,7 @@ export default {
       combustivel,
     });
     await vesselRepository.save(vessel);
-
+     console.log(vessel.id)
     if (!vessel.jetski) {
       const check = checkListERepository.create({ vesselId: vessel.id });
       await checkListERepository.save(check);
