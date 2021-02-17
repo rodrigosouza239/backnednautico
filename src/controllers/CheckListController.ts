@@ -104,4 +104,11 @@ export default {
       return response.status(200).json(checkListEdited);
     }
   },
+
+  async indexAll(request: Request, response: Response){
+    const vesselsRepository = getRepository(Vessel);
+    const vesselExists = await vesselsRepository.find();
+    return response.json(vesselExists)
+  },
+
 };

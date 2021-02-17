@@ -67,5 +67,6 @@ routes.put("/schedules/:id", ScheduleController_1.default.update);
 routes.delete("/schedules/:id", ScheduleController_1.default.delete);
 //CheckList
 routes.get("/vessels/:id/checkList", CheckListController_1.default.index);
+routes.get("/checklistAll", CheckListController_1.default.indexAll);
 routes.put("/vessels/:id/checkList", CheckListController_1.default.update);
 exports.default = routes;

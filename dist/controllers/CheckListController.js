@@ -85,4 +85,9 @@ exports.default = {
             return response.status(200).json(checkListEdited);
         }
     },
+    async indexAll(request, response) {
+        const vesselsRepository = typeorm_1.getRepository(Vessel_1.default);
+        const vesselExists = await vesselsRepository.find();
+        return response.json(vesselExists);
+    },
 };
