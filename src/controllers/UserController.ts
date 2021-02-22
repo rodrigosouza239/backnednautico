@@ -5,6 +5,13 @@ import { getRepository } from "typeorm";
 import bcrypt from "bcryptjs";
 
 import User from "../models/User";
+import Vessel from "../models/Vessel";
+import Damaged from "../models/Damaged";
+import Review from "../models/Review";
+import Schedule from "../models/Schedule";
+import Finding from "../models/Finding";
+import CheckListE from "../models/CheckListE";
+import CheckListJ from "../models/CheckListJ";
 import MailerModule from "../modules/mailer";
 
 export default {
@@ -111,14 +118,6 @@ export default {
       }
     }
 
-    
-
-    if (password && !oldPassword) {
-      return response.status(401).json({
-        error: "Para mudar a senha é necessario informar a senha antiga",
-      });
-    }
-
     if (oldPassword) {
       const isValidPassword = await bcrypt.compare(oldPassword, user.password);
       if (!isValidPassword) {
@@ -143,6 +142,13 @@ export default {
 
   async delete(request: Request, response: Response) {
     const usersRepository = getRepository(User);
+    const vesselRepository = getRepository(Vessel);
+    const reviewsRepository = getRepository(Review);
+    const damagedRepository = getRepository(Damaged);
+    const scheduleRepository = getRepository(Schedule);
+    const findingRepository = getRepository(Finding);
+    const checkListERepository = getRepository(CheckListE);
+    const checkListJRepository = getRepository(CheckListJ);
     const { id } = request.params;
 
     if (!request.useMaster) {
@@ -157,7 +163,30 @@ export default {
       return response.status(400).json({ error: "Esse usuario não existe!" });
     }
 
+    const vessels = await vesselRepository.find({where: {userId: id}})
+
+    for (const key in vessels) {
+      if (Object.prototype.hasOwnProperty.call(vessels, key)) {
+        const element = vessels[key];
+        
+        const deleteReviews = await reviewsRepository.delete({ vesselId: element.id });
+        const deleteDamaged = await damagedRepository.delete({ vesselId: element.id });
+        const deleteSchedules = await scheduleRepository.delete({ vesselId: element.id });
+        const deleteFindings = await findingRepository.delete({ vesselId: element.id });
+        const deleteCheckListE = await checkListERepository.delete({
+          vesselId: element.id,
+        });
+        const deleteCheckListJ = await checkListJRepository.delete({
+          vesselId: element.id,
+        });
+        const deleteVessel = await vesselRepository.delete(element.id);
+
+      }
+    }
+
     const results = await usersRepository.delete(id);
+    
+
     return response.send(results);
   },
 

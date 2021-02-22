@@ -27,6 +27,13 @@ const crypto = __importStar(require("crypto"));
 const typeorm_1 = require("typeorm");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const User_1 = __importDefault(require("../models/User"));
+const Vessel_1 = __importDefault(require("../models/Vessel"));
+const Damaged_1 = __importDefault(require("../models/Damaged"));
+const Review_1 = __importDefault(require("../models/Review"));
+const Schedule_1 = __importDefault(require("../models/Schedule"));
+const Finding_1 = __importDefault(require("../models/Finding"));
+const CheckListE_1 = __importDefault(require("../models/CheckListE"));
+const CheckListJ_1 = __importDefault(require("../models/CheckListJ"));
 const mailer_1 = __importDefault(require("../modules/mailer"));
 exports.default = {
     async create(request, response) {
@@ -108,11 +115,6 @@ exports.default = {
                     .json({ error: "Usuario com esse email já existe" });
             }
         }
-        if (password && !oldPassword) {
-            return response.status(401).json({
-                error: "Para mudar a senha é necessario informar a senha antiga",
-            });
-        }
         if (oldPassword) {
             const isValidPassword = await bcryptjs_1.default.compare(oldPassword, user.password);
             if (!isValidPassword) {
@@ -132,6 +134,13 @@ exports.default = {
     },
     async delete(request, response) {
         const usersRepository = typeorm_1.getRepository(User_1.default);
+        const vesselRepository = typeorm_1.getRepository(Vessel_1.default);
+        const reviewsRepository = typeorm_1.getRepository(Review_1.default);
+        const damagedRepository = typeorm_1.getRepository(Damaged_1.default);
+        const scheduleRepository = typeorm_1.getRepository(Schedule_1.default);
+        const findingRepository = typeorm_1.getRepository(Finding_1.default);
+        const checkListERepository = typeorm_1.getRepository(CheckListE_1.default);
+        const checkListJRepository = typeorm_1.getRepository(CheckListJ_1.default);
         const { id } = request.params;
         if (!request.useMaster) {
             return response
@@ -141,6 +150,23 @@ exports.default = {
         const user = await usersRepository.findOne({ where: { id } });
         if (!user) {
             return response.status(400).json({ error: "Esse usuario não existe!" });
+        }
+        const vessels = await vesselRepository.find({ where: { userId: id } });
+        for (const key in vessels) {
+            if (Object.prototype.hasOwnProperty.call(vessels, key)) {
+                const element = vessels[key];
+                const deleteReviews = await reviewsRepository.delete({ vesselId: element.id });
+                const deleteDamaged = await damagedRepository.delete({ vesselId: element.id });
+                const deleteSchedules = await scheduleRepository.delete({ vesselId: element.id });
+                const deleteFindings = await findingRepository.delete({ vesselId: element.id });
+                const deleteCheckListE = await checkListERepository.delete({
+                    vesselId: element.id,
+                });
+                const deleteCheckListJ = await checkListJRepository.delete({
+                    vesselId: element.id,
+                });
+                const deleteVessel = await vesselRepository.delete(element.id);
+            }
         }
         const results = await usersRepository.delete(id);
         return response.send(results);

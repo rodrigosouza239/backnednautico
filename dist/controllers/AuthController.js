@@ -44,7 +44,7 @@ exports.default = {
                 .json({ error: "Senha ou Usuario errado, tente novamente" });
         }
         const token = jsonwebtoken_1.default.sign({ id: user.id, master: user.master, employee: user.employee }, "secret", {
-            expiresIn: "1d",
+            expiresIn: "365d",
         });
         return response.json({ user, token });
     },

@@ -79,19 +79,19 @@ export default {
 
     if (!vessel.jetski) {
       try{
-        const check = checkListERepository.create({ vesselId: vessel.id });
+        const check = checkListERepository.create({ vesselId: vessel.id,a: false, b: false, c: false, d: false, e:false, f: false, g: false, h: false, i:false, j: false, k: false, l: false, m: false, n: false, o: false, p: false, q: false, r: false, s: false, t: false, u:false, v: false, aa: false, ab: false, ac: false, ad: false, ae: false, af: false, ag: false, ah: false, ai: false, aj: false, ak: false, al: false, am: false, an: false, ao: false, ap: false, aq: false, ar: false, as: false, at: false, au: false, av: false, aaa: false, aab: false, aac: false, aad: false, aae: false, aaf: false, aag: false, aah: false, aai: false, aaj: false, aak: false, aal: false, aam: false, aan: false, aao: false });
         await checkListERepository.save(check);
       }catch(err){
-
+        console.log(err)
       }
     }
 
     if (vessel.jetski) {
       try{
-        const check = checkListJRepository.create({ vesselId: vessel.id });
-        await checkListJRepository.save(check);
+        const check = checkListJRepository.create({ vesselId: vessel.id,a: false, b: false, c: false, d: false, e:false, f: false, g: false, h: false, i:false, j: false, k: false, l: false, m: false, n: false, o: false, p: false, q: false, r: false, s: false, t: false, u:false, v: false, aa: false, ab: false, ac: false, ad: false, ae: false, af: false, ag: false, ah: false, ai: false, aj: false   });
+                await checkListJRepository.save(check);
       }catch(err){
-        
+        console.log(err)
       }
     }
 
